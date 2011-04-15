@@ -1,0 +1,29 @@
+h1. The Pidato Experiment
+
+The aim of the pidato experiment is to demonstrate a method to handle vibrato on a digital piano. 
+It offers a solution to the 'vibrato' markings on the piano solo scores of Franz Liszt. Also, it is fun
+to play with.
+
+Pidato stands for piano, vibrato and Arduino: the chip used in this experiment. It also means expression, speech in Indonesian.
+
+More info on "The Pidato Experiment: Vibrato on a Digital Piano Using an Arduino":http://0110.be/artikels/lees/The_Pidato_Experiment%253A_Vibrato_on_a_Digital_Piano_Using_an_Arduino
+
+h2. Method
+
+The way it works is by translating movement (accelerometer data) to MIDI messages. 
+
+The hardware consists of an "Arduino":http://arduino.cc, MIDI ports and a three axis accelerometer. 
+
+The software should know when a vibrato like movement is made and 
+how to translate such movement to MIDI messages. 
+The software therefore contains a periodicity estimator and frequency detector to detect how periodic 
+a movement is and how fast the movement is repeated. 
+This was done with the 
+"YIN algorithm":http://audition.ens.fr/adc/pdf/2002_JASA_YIN.pdf (more commonly used in audio signal analysis).
+
+The YIN algorithm is encapsulated in an Arduino Library and can be used to estimate pitch and periodicity of any signal.
+
+h2. Results
+
+A video on youtube shows the results of the Pidato experiment: "vibrato on a digital piano":http://www.youtube.com/watch?v=phDV_qioBMU&feature=player_embedded#at=67. Please note that this is a technical demonstration, 
+not an artistic performance... in any way.
