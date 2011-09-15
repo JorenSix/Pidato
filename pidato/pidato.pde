@@ -14,10 +14,11 @@
 #define piny 1   // analogue pin 1 = y axis
 #define INIT_TIMER_COUNT 6
 #define RESET_TIMER2 TCNT2 = INIT_TIMER_COUNT
+#define LED 13
  
 //accelerometer data
 long valy;
-long yOffset;
+long yOffset = 0;
 
 //read buffer
 float* buffer;
@@ -86,7 +87,8 @@ void setupMidi(){
 void setup(){
   //setup accelerometer
   //change ref v from 5 to 3.3V: divides 0-3.3V to 0-1023 instead of 0-5V  
-  analogReference(EXTERNAL);
+  //analogReference(EXTERNAL);
+  pinMode(LED, OUTPUT);
   calibrate();
   
   //setup YIN
@@ -101,6 +103,13 @@ void setup(){
   
   //setup interrupt
   setupTimerInterrupt();
+  
+  for(int i = 0 ; i < 4 ; i++){
+    digitalWrite(LED,HIGH);
+    delay(300);
+    digitalWrite(LED,LOW);
+    delay(300);
+  }
 }
 
 
@@ -147,11 +156,11 @@ void loop(){
   //call YIN to determine periodicity and probability
   pitch = yin.getPitch(buffer);
   periodicity = yin.getProbability();
-  
+  digitalWrite(LED,LOW); 
   //if a pitch is detected and the signal is very periodic
   //start sending out pitch bend messages (decay set to 800)
   if(pitch > 0 && periodicity > 0.91){
-    
+    digitalWrite(LED,HIGH); 
     //if a big change in pitch (0.25Hz) calculate a new phase (offset) and 2 pi f;
     if(abs(previousPitch-pitch) > 0.25){
       //calculate the pase offset with
