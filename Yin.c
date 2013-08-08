@@ -1,52 +1,6 @@
 #include "Yin.h"
-#include "WProgram.h"
-void Yin::initialize(float yinSampleRate,int yinBufferSize){
-	bufferSize = yinBufferSize;
-	sampleRate = yinSampleRate;
-	halfBufferSize = bufferSize / 2;
-	threshold = 0.15;
-	probability = 0.0;
-	//initialize array and set it to zero
-	yinBuffer = (float *) malloc(sizeof(float)* halfBufferSize);
-	for(int i = 0; i < halfBufferSize; i++){
-		yinBuffer[i] = 0;
-	}
-}
 
-Yin::Yin(){
-}
-
-Yin::Yin(float yinSampleRate,int yinBufferSize){
-	initialize(yinSampleRate,yinBufferSize);
-}
-
-float Yin::getProbability(){
-	return probability;
-}
-
-float Yin::getPitch(float* buffer){
-	int tauEstimate = -1;
-	float pitchInHertz = -1;
-	
-	//step 2
-	difference(buffer);
-	
-	// step 3
-	cumulativeMeanNormalizedDifference();
-	
-	//step 4
-	tauEstimate = absoluteThreshold();
-	
-	//step 5
-	if(tauEstimate != -1){
-		
-		pitchInHertz = sampleRate / parabolicInterpolation(tauEstimate);
-	}
-	
-	return pitchInHertz;
-}
-
-float Yin::parabolicInterpolation(int tauEstimate) {
+float Yin_parabolicInterpolation(int tauEstimate) {
 	float betterTau;
 	int x0;
 	int x2;
@@ -91,7 +45,7 @@ float Yin::parabolicInterpolation(int tauEstimate) {
 	return betterTau;
 }
 
-void Yin::cumulativeMeanNormalizedDifference(){
+void Yin_cumulativeMeanNormalizedDifference(){
 	int tau;
 	yinBuffer[0] = 1;
 	float runningSum = 0;
@@ -101,7 +55,7 @@ void Yin::cumulativeMeanNormalizedDifference(){
 	}
 }
 
-void Yin::difference(float* buffer){
+void Yin_difference(float* buffer){
 	int index;
 	int tau;
 	float delta;
@@ -113,7 +67,7 @@ void Yin::difference(float* buffer){
 	}
 }
 
-int Yin::absoluteThreshold(){
+int Yin_absoluteThreshold(){
 	int tau;
 	// first two positions in yinBuffer are always 1
 	// So start at the third (index 2)
@@ -142,3 +96,45 @@ int Yin::absoluteThreshold(){
 	}
 	return tau;
 }
+
+void Yin_init(Yin *yin, int bufferSize){
+	bufferSize = yinBufferSize;
+	sampleRate = yinSampleRate;
+	halfBufferSize = bufferSize / 2;
+	threshold = 0.15;
+	probability = 0.0;
+	//initialize array and set it to zero
+	yinBuffer = (float *) malloc(sizeof(float)* halfBufferSize);
+	for(int i = 0; i < halfBufferSize; i++){
+		yinBuffer[i] = 0;
+	}
+}
+
+
+float Yin_getProbability(Yin *yin){
+	return yin->probability;
+}
+
+float Yin_getPitch(Yin *yin, float* buffer){
+	int tauEstimate = -1;
+	float pitchInHertz = -1;
+	
+	//step 2
+	difference(buffer);
+	
+	// step 3
+	cumulativeMeanNormalizedDifference();
+	
+	//step 4
+	tauEstimate = absoluteThreshold();
+	
+	//step 5
+	if(tauEstimate != -1){
+		
+		pitchInHertz = sampleRate / parabolicInterpolation(tauEstimate);
+	}
+	
+	return pitchInHertz;
+}
+
+
