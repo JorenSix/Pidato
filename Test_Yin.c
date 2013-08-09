@@ -5,7 +5,6 @@
 #include "Yin.h"
 #include <stdio.h>
 
-#define BUFFER_SIZE 5000
 
 /* Audio array with samples from .wav file
  * contains 
@@ -20,9 +19,12 @@ int main(int argc, char** argv) {
 	Yin yin;
 	float pitch;
 
+	printf("About to test how many samples are needed to detect the pitch in a given signal\n");
+	printf("WARNING: this test has an absolute disregard for memory managment, hang tight this could hurt a little...\n");
+
 	while (pitch < 10 ) {
 		Yin_init(&yin, buffer_length, YIN_DEFAULT_THRESHOLD);
-		pitch = Yin_getPitch(&yin, audio);	
+		pitch = Yin_getPitch(&yin, audio+1000);	
 		buffer_length++;
 	}
 	
