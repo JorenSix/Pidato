@@ -5,23 +5,28 @@
 #include "Yin.h"
 #include <stdio.h>
 
-/* Audio array with samples from .wav file */
+#define BUFFER_SIZE 5000
+
+/* Audio array with samples from .wav file
+ * contains 
+ *     #define NUM_SAMPLES 176400 
+ *     int audio[176400] = {...} 
+ */
 #include "audioData.h"
 
-#define SAMPLES_PER_ITERATION 4096
-#define ITERATIONS 15
 
 int main(int argc, char** argv) {
-
-	
-	
+	int buffer_length = 100;
+	Yin yin;
 	float pitch;
-	int counter = 0;
-	for(counter = 0; counter < (SAMPLES_PER_ITERATION * ITERATIONS); counter += SAMPLES_PER_ITERATION)
-	{
-		pitch = dywapitch_computepitch(&tracker, audio, counter, SAMPLES_PER_ITERATION);	
+
+	while (pitch < 10 ) {
+		Yin_init(&yin, buffer_length, YIN_DEFAULT_THRESHOLD);
+		pitch = Yin_getPitch(&yin, audio);	
+		buffer_length++;
 	}
 	
-	printf("Pitch is found to be %f\n",pitch );
+	
+	printf("Pitch is found to be %f with buffer length %i \n",pitch, buffer_length );
 	return 0;
 }

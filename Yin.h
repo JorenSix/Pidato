@@ -1,20 +1,21 @@
 #ifndef Yin_h
 #define Yin_h
 
-#define SAMPLING_RATE
+#define SAMPLING_RATE 44100
+#define YIN_DEFAULT_THRESHOLD 0.15
 
 typedef struct _Yin {
-	double threshold;
 	int bufferSize;
 	int halfBufferSize;
 	float sampleRate;
 	float* yinBuffer;
 	float probability;
+	float threshold;
 } Yin;
 
-void Yin_init(Yin *yin, int bufferSize);
+void Yin_init(Yin *yin, int bufferSize, float threshold);
 
-float Yin_getPitch(Yin *yin, float* buffer);
+float Yin_getPitch(Yin *yin, int* buffer);
 
 float Yin_getProbability(Yin *yin);
 	

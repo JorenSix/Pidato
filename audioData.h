@@ -1,6 +1,6 @@
 #define NUM_SAMPLES 176400 
 
-float audio[176400] = {
+int audio[176400] = {
    0,
    0,
    0,

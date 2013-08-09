@@ -1,7 +1,7 @@
 # Makefile to build Test_Yin program
 # --- macros
 CC=gcc
-CFLAGS=  -g
+CFLAGS=  -g -Wall
 OBJECTS= Test_Yin.o Yin.o
 
 # --- targets
