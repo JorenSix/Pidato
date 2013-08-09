@@ -203,7 +203,7 @@ float Yin_getPitch(Yin *yin, int16_t* buffer){
 	
 	/* Step 5: Interpolate the shift value (tau) to improve the pitch estimate. */
 	if(tauEstimate != -1){
-		pitchInHertz = SAMPLING_RATE / Yin_parabolicInterpolation(yin, tauEstimate);
+		pitchInHertz = YIN_SAMPLING_RATE / Yin_parabolicInterpolation(yin, tauEstimate);
 	}
 	
 	return pitchInHertz;

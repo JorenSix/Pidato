@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define SAMPLING_RATE 44100
+#define YIN_SAMPLING_RATE 44100
 #define YIN_DEFAULT_THRESHOLD 0.15
 
 /**

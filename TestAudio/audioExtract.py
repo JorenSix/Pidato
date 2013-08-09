@@ -16,6 +16,9 @@ for i in range(0,length):
     data = struct.unpack("<h", waveData)
     audioData.append(data[0])
 
+# Truncate the samples we don't need
+audioData = audioData[1000:2500]
+
 # Plot the signal
 plt.plot(audioData)
 plt.title("Original Audio Signal")
@@ -45,7 +48,7 @@ plt.show()
 # Write the first line to the .h file with an integer array of the samples and a #define with the number of samples
 f = open('audioData.h','w')
 f.write('#define NUM_SAMPLES %i \n\n' % len(audioData))
-f.write('int audio[%i] = {\n' % len(audioData))
+f.write('int16_t audio[%i] = {\n' % len(audioData))
 
 # Write all lines except the last one
 for sample in audioData[:-1]:
