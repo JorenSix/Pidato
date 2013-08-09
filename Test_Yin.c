@@ -4,6 +4,7 @@
 
 #include "Yin.h"
 #include <stdio.h>
+#include <stdint.h>
 
 
 /* Audio array with samples from .wav file
@@ -23,12 +24,12 @@ int main(int argc, char** argv) {
 	printf("WARNING: this test has an absolute disregard for memory managment, hang tight this could hurt a little...\n");
 
 	while (pitch < 10 ) {
-		Yin_init(&yin, buffer_length, YIN_DEFAULT_THRESHOLD);
+		Yin_init(&yin, buffer_length, 0.05);
 		pitch = Yin_getPitch(&yin, audio+1000);	
 		buffer_length++;
 	}
 	
 	
-	printf("Pitch is found to be %f with buffer length %i \n",pitch, buffer_length );
+	printf("Pitch is found to be %f with buffer length %i and probabiity %f\n",pitch, buffer_length, Yin_getProbability(&yin) );
 	return 0;
 }

@@ -45,7 +45,7 @@ plt.show()
 # Write the first line to the .h file with an integer array of the samples and a #define with the number of samples
 f = open('audioData.h','w')
 f.write('#define NUM_SAMPLES %i \n\n' % len(audioData))
-f.write('double audio[%i] = {\n' % len(audioData))
+f.write('int audio[%i] = {\n' % len(audioData))
 
 # Write all lines except the last one
 for sample in audioData[:-1]:

@@ -1,3 +1,4 @@
+#include <stdint.h> /* For standard interger types (int16_t) */
 #include <stdlib.h> /* For call to malloc */
 #include "Yin.h"
 
@@ -12,9 +13,9 @@
  * This is the Yin algorithms tweak on autocorellation. Read http://audition.ens.fr/adc/pdf/2002_JASA_YIN.pdf
  * for more details on what is in here and why it's done this way.
  */
-void Yin_difference(Yin *yin, int* buffer){
-	int i;
-	int tau;
+void Yin_difference(Yin *yin, int16_t* buffer){
+	int16_t i;
+	int16_t tau;
 	float delta;
 
 	/* Calculate the difference for difference shift values (tau) for the half of the samples */
@@ -38,7 +39,7 @@ void Yin_difference(Yin *yin, int* buffer){
  * produced the smallest difference
  */
 void Yin_cumulativeMeanNormalizedDifference(Yin *yin){
-	int tau;
+	int16_t tau;
 	float runningSum = 0;
 	yin->yinBuffer[0] = 1;
 
@@ -54,8 +55,8 @@ void Yin_cumulativeMeanNormalizedDifference(Yin *yin){
  * Step 3: Search through the normalised cumulative mean array and find values that are over the threshold
  * @return Shift (tau) which caused the best approximate autocorellation. -1 if no suitable value is found over the threshold.
  */
-int Yin_absoluteThreshold(Yin *yin){
-	int tau;
+int16_t Yin_absoluteThreshold(Yin *yin){
+	int16_t tau;
 
 	/* Search through the array of cumulative mean values, and look for ones that are over the threshold 
 	 * The first two positions in yinBuffer are always so start at the third (index 2) */
@@ -97,10 +98,10 @@ int Yin_absoluteThreshold(Yin *yin){
  * As we only autocorellated using integer shifts we should check that there isn't a better fractional 
  * shift value.
  */
-float Yin_parabolicInterpolation(Yin *yin, int tauEstimate) {
+float Yin_parabolicInterpolation(Yin *yin, int16_t tauEstimate) {
 	float betterTau;
-	int x0;
-	int x2;
+	int16_t x0;
+	int16_t x2;
 	
 	/* Calculate the first polynomial coeffcient based on the current estimate of tau */
 	if (tauEstimate < 1) {
@@ -153,15 +154,19 @@ float Yin_parabolicInterpolation(Yin *yin, int tauEstimate) {
 
 
 
-
-
-
 /* ------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------- PUBLIC FUNCTIONS
 -------------------------------------------------------------------------------------------*/
 
 
-void Yin_init(Yin *yin, int bufferSize, float threshold){
+
+/**
+ * Initialise the Yin pitch detection object
+ * @param yin        Yin pitch detection object to initialise
+ * @param bufferSize Length of the audio buffer to analyse
+ * @param threshold  Allowed uncertainty (e.g 0.05 will return a pitch with ~95% probability)
+ */
+void Yin_init(Yin *yin, int16_t bufferSize, float threshold){
 	/* Initialise the fields of the Yin structure passed in */
 	yin->bufferSize = bufferSize;
 	yin->halfBufferSize = bufferSize / 2;
@@ -171,19 +176,20 @@ void Yin_init(Yin *yin, int bufferSize, float threshold){
 	/* Allocate the autocorellation buffer and initialise it to zero */
 	yin->yinBuffer = (float *) malloc(sizeof(float)* yin->halfBufferSize);
 
-	int i;
+	int16_t i;
 	for(i = 0; i < yin->halfBufferSize; i++){
 		yin->yinBuffer[i] = 0;
 	}
 }
 
-
-float Yin_getProbability(Yin *yin){
-	return yin->probability;
-}
-
-float Yin_getPitch(Yin *yin, int* buffer){
-	int tauEstimate = -1;
+/**
+ * Runs the Yin pitch detection algortihm
+ * @param  yin    Initialised Yin object
+ * @param  buffer Buffer of samples to analyse
+ * @return        Fundamental frequency of the signal in Hz. Returns -1 if pitch can't be found
+ */
+float Yin_getPitch(Yin *yin, int16_t* buffer){
+	int16_t tauEstimate = -1;
 	float pitchInHertz = -1;
 	
 	/* Step 1: Calculates the squared difference of the signal with a shifted version of itself. */
@@ -202,5 +208,15 @@ float Yin_getPitch(Yin *yin, int* buffer){
 	
 	return pitchInHertz;
 }
+
+/**
+ * Certainty of the pitch found 
+ * @param  yin Yin object that has been run over a buffer
+ * @return     Returns the certainty of the note found as a decimal (i.e 0.3 is 30%)
+ */
+float Yin_getProbability(Yin *yin){
+	return yin->probability;
+}
+
 
 
