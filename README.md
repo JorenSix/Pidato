@@ -1,5 +1,5 @@
-# Latex Report Template
-### A nice little starting point for people getting into latex
+# Yin Pitch Tracking
+### Implementation of the Yin pitch detection algorithm in pure C
 
 ## Author
 [Ashok Fernandez](https://github.com/ashokfernandez/)
