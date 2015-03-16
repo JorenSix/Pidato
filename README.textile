@@ -19,3 +19,7 @@ The YIN algorithm is encapsulated in an Arduino Library and can be used to estim
 h2. Results
 
 A video on youtube shows the results of the Pidato experiment: "vibrato on a digital piano":http://www.youtube.com/watch?v=phDV_qioBMU&feature=player_embedded#at=67. Please note that this is a technical demonstration, not an artistic performance... in any way.
+
+h2. Lisence
+
+The software is licensed under the GPL since the Yin code is based on the GPL'd TarsosDSP java implementation which is in turn based on the "aubio":http://aubio.org/ implementation in c by Paul Brossier, also under the GPL.
